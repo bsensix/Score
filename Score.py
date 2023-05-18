@@ -48,7 +48,7 @@ ordered_dataframe = tabela.sort_values(by=["DATA"])
 means_array = np.array(ordered_dataframe['NDVI'].array, dtype="float")
 peak_vals = [means_array[peak] for peak in find_peaks(means_array)[0]]
 valor_p90 = np.percentile(peak_vals, 90, method="midpoint")
-valor_p90 = round(valor_p90,2)
+valor_p90 = round(valor_p90,4)
 print(valor_p90)
 
 
