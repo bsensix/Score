@@ -60,10 +60,18 @@ print(tabela)
 
 # In[14]:
 
+def to_excel(tabela):
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    tabela.to_excel(writer, index=False, sheet_name='Sheet1')
+    workbook = writer.book
+    worksheet = writer.sheets['Sheet1']
+    format1 = workbook.add_format({'num_format': '0.00'}) 
+    worksheet.set_column('A:A', None, format1)  
+    writer.save()
+    processed_data = output.getvalue()
+    return processed_data
 
-# DataFrame para Planilha Excel em xlsx
-tabela_csv = tabela.to_csv(index=False).encode('utf-8')
-
-st.download_button(label=' ⬇️ Download Levantamento Solos', data = tabela_csv ,file_name= 'Planilha_IVs.csv')
+st.download_button(label=' ⬇️ Download Levantamento Solos', data= to_excel(tabela), mime =  "application/octet-stream", file_name= 'Planilha_Solos.xlsx')
 
 
