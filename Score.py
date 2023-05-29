@@ -39,7 +39,7 @@ uploaded_files = st.sidebar.file_uploader("Upload Planilha dados Sentinel 📥")
 # In[13]:
 
 
-tabela = pd.read_csv(r'C:\Users\breno\Downloads\Romaria_1.csv')
+tabela = pd.read_csv(uploaded_files)
 tabela_filtro = ['system:index','NDVI','Nome']
 tabela= tabela[tabela_filtro]
 tabela['DATA'] = tabela['system:index'].apply(lambda x: x[:8])
