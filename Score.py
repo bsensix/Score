@@ -28,7 +28,7 @@ import base64
 
 #Barra Lateral
 barra_lateral = st.sidebar.empty()
-image = Image.open(r'C:\Users\breno\Desktop\TESTE_SRICPT\SCRIPT_CURVAS_FENOLOGICAS\Logo-Escuro.png')
+image = Image.open('Logo-Escuro.png')
 st.sidebar.image(image)
 st.sidebar.markdown('### Calculo Score Sentinel-2')
 # Upload Arquivo csv 
@@ -40,7 +40,7 @@ uploaded_files = st.sidebar.file_uploader("Upload Planilha dados Sentinel 📥")
 # In[4]:
 
 
-tabela = pd.read_csv(r'C:\Users\breno\Downloads\Romaria_1.csv')
+tabela = pd.read_csv(uploaded_files)
 tabela_filtro = ['system:index','NDVI','Nome']
 tabela= tabela[tabela_filtro]
 tabela['DATA'] = tabela['system:index'].apply(lambda x: x[:8])
