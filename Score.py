@@ -3,7 +3,7 @@
 
 # ##  Bibliotecas:
 
-# In[2]:
+# In[1]:
 
 
 import argparse
@@ -23,12 +23,12 @@ import base64
 
 # ##  Barra Lateral: 
 
-# In[3]:
+# In[2]:
 
 
 #Barra Lateral
 barra_lateral = st.sidebar.empty()
-image = Image.open('Logo-Escuro.png')
+image = Image.open(r'C:\Users\breno\Desktop\TESTE_SRICPT\SCRIPT_CURVAS_FENOLOGICAS\Logo-Escuro.png')
 st.sidebar.image(image)
 st.sidebar.markdown('### Calculo Score Sentinel-2')
 # Upload Arquivo csv 
@@ -37,45 +37,38 @@ uploaded_files = st.sidebar.file_uploader("Upload Planilha dados Sentinel 📥")
 
 # ##  ETL no CSV: 
 
-# In[7]:
+# In[4]:
 
 
-tabela = pd.read_excel(uploaded_files)
+tabela = pd.read_csv(r'C:\Users\breno\Downloads\Romaria_1.csv')
+tabela_filtro = ['system:index','NDVI','Nome']
+tabela= tabela[tabela_filtro]
+tabela['DATA'] = tabela['system:index'].apply(lambda x: x[:8])
+tabela['DATA'] = pd.to_datetime(tabela['DATA'], format='%Y%m%d').dt.strftime('%d/%m/%Y')
+tabela = tabela.dropna()
+
+tabela['NDVI'] = round(tabela['NDVI'],4)
+
+tabela = tabela.groupby(['DATA','Nome'])['NDVI'].min().reset_index()
+tabela['DATA'] = pd.to_datetime(tabela['DATA'], format='%d/%m/%Y')
+tabela = tabela.sort_values('DATA')
+ordem = ['DATA','Nome','NDVI']
+tabela = tabela[ordem]
+
+
 tabela.head()
 
 
-#Selecionar Fazenda
-filtro_fazenda = st.sidebar.selectbox('Selecione a Fazenda:',tabela['FAZENDA'])
-tabela_fazenda = tabela['FAZENDA'] == filtro_fazenda
-tabela_fazenda = tabela[tabela_fazenda]
+# ##  Salvar Dataframe em Excel: 
+
+# In[5]:
 
 
-#Selecionar Talhão 
-filtro_talhao = st.sidebar.selectbox('Selecione o Talhão:',tabela['TALHÃO'])
-tabela_talhao = tabela_fazenda['TALHÃO'] == filtro_talhao
-tabela_talhao = tabela_fazenda[tabela_talhao]
+tabela_csv = tabela.to_csv(index=False).encode('utf-8')
 
-
-# ##  Calculo do Score: 
-
-# In[8]:
-
-
-ordered_dataframe = tabela_talhao.sort_values(by=["DATA"])
-means_array = np.array(ordered_dataframe['NDVI'].array, dtype="float")
-peak_vals = [means_array[peak] for peak in find_peaks(means_array)[0]]
-valor_p90 = np.percentile(peak_vals, 90, method="midpoint")
-valor_p90 = round(valor_p90,4)
-print(valor_p90)
-
-
-# In[150]:
-
-
-st.metric(label="O valor do Score é:", value= valor_p90)
+st.download_button(label=' ⬇️ Download Planilha IVs', data= tabela_csv, file_name= 'Planilha_IVs.csv')
 
 
 # In[ ]:
-
 
 
