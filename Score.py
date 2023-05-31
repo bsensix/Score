@@ -77,7 +77,7 @@ def to_excel(tabela):
     return processed_data
 
 df = to_excel(tabela)
-st.download_button(label=' ⬇️ Download Planilha IVs', data= df, file_name= 'Planilha_IVs.xlsx')
+st.download_button(label=' ⬇️ Download Planilha IVs', data= df, file_name= 'Planilha_IVs.xls')
 
 # In[ ]:
 
