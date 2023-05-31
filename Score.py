@@ -64,7 +64,7 @@ tabela.head()
 # In[5]:
 
 
-tabela_csv = tabela.to_excel(index=False).encode('utf-8')
+tabela_csv = tabela.to_csv(index=False).encode('utf-8')
 
 st.download_button(label=' ⬇️ Download Planilha IVs', data= tabela_csv, file_name= 'Planilha_IVs.csv')
 
