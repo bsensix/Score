@@ -59,25 +59,14 @@ tabela = tabela[ordem]
 tabela.head()
 
 
-# ##  Salvar Dataframe em Excel: 
+# ##  Salvar Dataframe em CSV: 
 
 # In[5]:
 
 
-# buffer to use for excel writer
-buffer = io.BytesIO()
+tabela_csv = tabela.to_excel(index=False, excel_writer = ).encode('utf-8')
 
-with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-    # Write each dataframe to a different worksheet.
-    tabela.to_excel(writer, sheet_name='Sheet1', index=False)
-    # Close the Pandas Excel writer and output the Excel file to the buffer
-    writer.save()
-    
-st.download_button(label=' ⬇️ Download Planilha IVs',
-    data=buffer,
-    file_name='large_df.xlsx',
-    mime='application/vnd.ms-excel'
-    )
+st.download_button(label=' ⬇️ Download Planilha IVs', data= tabela_csv, file_name= 'Planilha_IVs.csv')
 
 # In[ ]:
 
