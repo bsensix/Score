@@ -17,7 +17,7 @@ from scipy.signal import find_peaks
 import xlsxwriter 
 import streamlit as st
 from PIL import Image
-from io import BytesIO
+import io
 import base64
 
 
@@ -64,20 +64,20 @@ tabela.head()
 # In[5]:
 
 
-def to_excel(tabela):
-    output = BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    tabela.to_excel(writer, index=False, sheet_name='Sheet1')
-    workbook = writer.book
-    worksheet = writer.sheets['Sheet1']
-    format1 = workbook.add_format({'num_format': '0.00'}) 
-    worksheet.set_column('A:A', None, format1)  
-    writer.save()
-    processed_data = output.getvalue()
-    return processed_data
+# buffer to use for excel writer
+buffer = io.BytesIO()
 
-df = to_excel(tabela)
-st.download_button(label=' ⬇️ Download Planilha IVs', data= df, file_name= 'Planilha_IVs.xls')
+with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+    # Write each dataframe to a different worksheet.
+    tabela.to_excel(writer, sheet_name='Sheet1', index=False)
+    # Close the Pandas Excel writer and output the Excel file to the buffer
+    writer.save()
+    
+st.download_button(label=' ⬇️ Download Planilha IVs',
+    data=buffer,
+    file_name='large_df.xlsx',
+    mime='application/vnd.ms-excel'
+    )
 
 # In[ ]:
 
