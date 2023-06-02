@@ -41,7 +41,7 @@ uploaded_files = st.sidebar.file_uploader("Upload Planilha dados Sentinel 📥")
 
 
 tabela = pd.read_csv(uploaded_files)
-tabela_filtro = ['system:index','NDVI','Talhao']
+tabela_filtro = ['system:index','NDVI','Talhão']
 tabela= tabela[tabela_filtro]
 tabela['DATA'] = tabela['system:index'].apply(lambda x: x[:8])
 tabela['DATA'] = pd.to_datetime(tabela['DATA'], format='%Y%m%d').dt.strftime('%d/%m/%Y')
@@ -49,10 +49,10 @@ tabela = tabela.dropna()
 
 tabela['NDVI'] = round(tabela['NDVI'],4)
 
-tabela = tabela.groupby(['DATA','Talhao'])['NDVI'].min().reset_index()
+tabela = tabela.groupby(['DATA','Talhão'])['NDVI'].min().reset_index()
 tabela['DATA'] = pd.to_datetime(tabela['DATA'], format='%d/%m/%Y')
 tabela = tabela.sort_values('DATA')
-ordem = ['DATA','Talhao','NDVI']
+ordem = ['DATA','Talhão','NDVI']
 tabela = tabela[ordem]
 
 
